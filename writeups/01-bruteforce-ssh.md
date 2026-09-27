@@ -126,7 +126,7 @@ In questo run l'attacco lento è **riuscito** nonostante la mole di fallimenti:
 la detection ha funzionato (alert 40112), ma **nulla ha bloccato l'attaccante**
 prima del successo.
 
-> ✏️ DA VERIFICARE (tuo): l'Active Response di Wazuh ha reagito? Controlla sull'host DMZ
+> DA VERIFICARE: l'Active Response di Wazuh ha reagito? Controlla sull'host DMZ
 > `sudo cat /var/ossec/logs/active-responses.log` e `sudo iptables -L -n`. Se non
 > c'è stato blocco, è un'osservazione difensiva importante: il rilevamento c'è
 > ma manca la risposta automatica → da configurare.
@@ -140,7 +140,7 @@ prima del successo.
 
 ## 6. Conclusioni e raccomandazioni difensive
 
-> ✏️ DA COMPLETARE (parte tua). Spunti forti, basati sui dati raccolti:
+> Spunti, basati sui dati raccolti:
 > - **Detection ottima, prevention assente**: rule 40112 individua la
 >   compromissione, ma l'attacco è andato a segno → serve Active Response
 >   (firewall-drop) o `fail2ban`.

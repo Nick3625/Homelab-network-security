@@ -1,0 +1,17 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+*~
+
+# Backup di config OPNsense (potrebbero contenere dati sensibili)
+*config*.xml
+*.bak
+
+# Wordlist di grandi dimensioni
+*.txt.gz
+rockyou.txt
+
+# Note personali / bozze locali
+_drafts/
+NOTES-personali.md

@@ -113,7 +113,7 @@ Dettaglio dell'evento:
 | decoder.name | sshd |
 | full_log | `Sep 25 13:10:26 ubsrvadv sshd-session[4054]: Accepted password for adv from 10.10.30.100 port 49370 ssh2` |
 
-Questo è il punto cruciale da SOC analyst: la regola **40112** correla i
+La regola **40112** correla i
 1.383 fallimenti con l'accesso riuscito finale, alzando la severità a 12. È il
 segnale che distingue un brute force *fallito* (solo rumore) da uno **riuscito**
 (compromissione effettiva). La correlazione temporale è perfetta: l'`Accepted

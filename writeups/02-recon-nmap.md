@@ -76,7 +76,7 @@ Flag utilizzati:
 
 ### 4.1 Alert generati da Suricata (visti in Wazuh)
 
-Gli alert di Suricata vengono ingeriti dall'agent Wazuh installato su OPNsense
+Gli alert di Suricata vengono rilevati dall'agent Wazuh installato su OPNsense
 (lettura di `/var/log/suricata/eve.json`) e sono visibili nella dashboard SIEM
 in *Threat Hunting*, filtrando per `rule.groups:suricata`.
 
@@ -108,7 +108,7 @@ cat /var/log/suricata/eve.json | jq 'select(.event_type=="alert") |
    cat:.alert.category, src:.src_ip, dst:.dest_ip, dport:.dest_port}'
 ```
 
-> Nota architetturale (lezione imparata): l'ingest verso Wazuh ha richiesto di
+> Nota architetturale: l'ingest verso Wazuh ha richiesto di
 > risolvere due problemi — Suricata che non ripartiva dopo il reboot e i permessi
 > di `eve.json` (ricreato `root -rw-------`, illeggibile all'agent). Entrambi
 > resi persistenti da un watchdog via cron. Dettagli in
@@ -116,11 +116,9 @@ cat /var/log/suricata/eve.json | jq 'select(.event_type=="alert") |
 
 ### 4.2 Cosa NON è stato rilevato
 
-> ✏️ DA COMPLETARE (parte tua): dopo aver confrontato lo scan aggressivo con uno evasivo, annota quali passano silenziosi.
-
+Suricata ha rilevato unicamente la service Detection (-sV), sonda a livello applicativo (HTTP) che portava user-agent di nmap, tralasciando i pacchetti SYN mandati alle varie porte per l'enumerazione e l'OS Detection.
+La rilevazione dipende quasi  unicamente dall'IDS, perchè il traffico passa su porte consentite del firewall e pertanto non solleva alcun log di deny.
 Osservazioni tecniche di partenza (da confermare/ampliare):
-
-- Il traffico Kali→DMZ transita su porte **consentite** dal firewall, quindi non produce log di *deny*: la detection dipende quasi interamente dall'IDS.
 - Suricata scrive solo su `eve.json` locale: **l'alert non raggiunge la dashboard Wazuh** (integrazione non ancora configurata) → gap di visibilità SIEM da colmare.
 
 ## 5. Mappatura MITRE ATT&CK
@@ -133,15 +131,13 @@ Osservazioni tecniche di partenza (da confermare/ampliare):
 
 ## 6. Conclusioni e raccomandazioni difensive
 
-> ✏️ DA COMPLETARE (parte tua): le tue considerazioni. Spunti da sviluppare:
-> - Efficacia del ruleset ET Open contro la ricognizione aggressiva
-> - Importanza di centralizzare gli alert (Suricata → Wazuh) per la correlazione e l'alerting
-> - Riduzione della superficie: SSH andrebbe esposto in DMZ? Header applicativi da irrigidire?
-> - Cosa faresti in un contesto reale (rate limiting, alert su scan, threat hunting)
+Il ruleset ET Open ha rilevato il tentativo di scanning con nmap, sollevando un alert di livello basso (3).
+Tuttavia il traffico rilevato dall'IDS è solo parte dell'attacco completo portato a termine (il port scan SYN vero e proprio è passato inosservato).
+La regola di rilevazione attuale è facilmente bypassabile: una modifica all'header analizzato non farebbe scattare nessun alert, rendendo l'attacco completamente silenzioso.
+L'impostazione di regole a soglia sul firewall rappresenta un'ulteriore misura implementabile, anch'essa debole perchè eludibile con scansioni lente.
+La misura più concreta, come visto nel primo laboratorio, sarebbe la riduzione delle superfici d'attacco (ad esempio chiusura porta ssh, se servizio è inutilizzato).
 
 ## 7. Lezioni imparate / note operative
-
-- _<eventuali intoppi tecnici incontrati durante lo scenario>_
 
 ---
 

@@ -29,7 +29,7 @@ Diagramma di riferimento: vedi [`docs/architecture.md`](../docs/architecture.md)
 ## 3. Esecuzione dell'attacco
 
 Sono stati eseguiti **due tentativi** con impostazioni diverse, con esiti
-opposti — ed è proprio il confronto a essere didatticamente interessante.
+opposti.
 
 ### 3.1 Tentativo 1 — attacco aggressivo (fallito)
 
@@ -57,7 +57,7 @@ hydra -l adv -P /tmp/small.txt ssh://10.10.20.10 -t 1 -W 5
 
 ![Hydra tentativo 2 - riuscito](../assets/01-bruteforce/hydra-attempt2-success.png)
 
-- 201 tentativi, **1 solo task** (`-t 1`), **5 secondi di attesa** tra i tentativi (`-W 5`)
+- 201 tentativi, **1 solo thread** (`-t 1`), **5 secondi di attesa** tra i tentativi (`-W 5`)
 - Ritmo osservato: ~6-8 tentativi/minuto
 - Esito: **`[22][ssh] host: 10.10.20.10  login: adv  password: root`** → credenziali trovate
 - `1 of 1 target successfully completed, 1 valid password found`
@@ -68,7 +68,7 @@ soglia di rate-limiting di `sshd` e porta a termine tutti i tentativi fino a
 trovare la password (`root`). Lezione: *low-and-slow* aggira i limiti di
 connessione, al prezzo della lentezza.
 
-## 4. Rilevamento difensivo (Wazuh)
+## 4. Rilevamento (Wazuh)
 
 ### 4.1 Volume degli eventi
 
@@ -113,7 +113,7 @@ Dettaglio dell'evento:
 | decoder.name | sshd |
 | full_log | `Sep 25 13:10:26 ubsrvadv sshd-session[4054]: Accepted password for adv from 10.10.30.100 port 49370 ssh2` |
 
-Questo è il punto cruciale da SOC analyst: la regola **40112** correla i
+La regola **40112** correla i
 1.383 fallimenti con l'accesso riuscito finale, alzando la severità a 12. È il
 segnale che distingue un brute force *fallito* (solo rumore) da uno **riuscito**
 (compromissione effettiva). La correlazione temporale è perfetta: l'`Accepted
@@ -126,7 +126,7 @@ In questo run l'attacco lento è **riuscito** nonostante la mole di fallimenti:
 la detection ha funzionato (alert 40112), ma **nulla ha bloccato l'attaccante**
 prima del successo.
 
-> ✏️ DA VERIFICARE (tuo): l'Active Response di Wazuh ha reagito? Controlla sull'host DMZ
+> DA VERIFICARE: l'Active Response di Wazuh ha reagito? Controlla sull'host DMZ
 > `sudo cat /var/ossec/logs/active-responses.log` e `sudo iptables -L -n`. Se non
 > c'è stato blocco, è un'osservazione difensiva importante: il rilevamento c'è
 > ma manca la risposta automatica → da configurare.
@@ -140,16 +140,11 @@ prima del successo.
 
 ## 6. Conclusioni e raccomandazioni difensive
 
-> ✏️ DA COMPLETARE (parte tua). Spunti forti, basati sui dati raccolti:
-> - **Detection ottima, prevention assente**: rule 40112 individua la
->   compromissione, ma l'attacco è andato a segno → serve Active Response
->   (firewall-drop) o `fail2ban`.
-> - **Hardening SSH**: password deboli (`root`!) sono il vero problema →
->   autenticazione a chiave, disabilitare login con password, limitare gli
->   utenti/sorgenti, valutare `MaxStartups`/`LoginGraceTime`.
-> - **Aggressivo vs low-and-slow**: il tuning di `sshd` che ha fatto fallire il
->   tentativo 1 va accompagnato da detection sul low-and-slow (che la 40112 copre).
-> - **Superficie**: SSH esposto in DMZ è necessario?
+Le regole preimpostate sono risultate parzialmente efficaci: sono riuscite sì a rilevare l'attacco (tutti i tentativi d'accesso, anche se distribuiti nel tempo; regola Wazuh 40112, " Multiple authentication failures followed by a success"), ma non hanno impedito la sua riuscita (kali ha testato con successo la password, sebbene fosse l'ultima del file).
+Questo evidenzia la necessità non solo di strumenti di rilevazione, ma anche di prevenzione. In una situazione ottimale il sistema avrebbe dovuto bloccare i tentativi a livello di host ('fail2ban'), perimetrale (regole firewall/verificare la soglia) o a livello di ssh (i tentativi più distribuiti non hanno generato congestione e le connessioni non sono state disabilitate).
+Wazuh permette di implementaare un firewall-drop (Active Response) in maniera automatica, ma non era implementato.
+Sono risultate rilevanti per la riuscita dell'attacco anche il fatto che la macchina colpita avesse la porta ssh aperta (misura non necessaria per questo server) e l'utilizzo di una password debole, senza una chiave.
+
 
 ## 7. Lezioni imparate / note operative
 

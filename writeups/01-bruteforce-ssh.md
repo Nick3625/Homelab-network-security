@@ -146,17 +146,6 @@ Wazuh permette di implementaare un firewall-drop (Active Response) in maniera au
 Sono risultate rilevanti per la riuscita dell'attacco anche il fatto che la macchina colpita avesse la porta ssh aperta (misura non necessaria per questo server) e l'utilizzo di una password debole, senza una chiave.
 
 
-> Spunti, basati sui dati raccolti:
-> - **Detection ottima, prevention assente**: rule 40112 individua la
->   compromissione, ma l'attacco è andato a segno → serve Active Response
->   (firewall-drop) o `fail2ban`.
-> - **Hardening SSH**: password deboli (`root`!) sono il vero problema →
->   autenticazione a chiave, disabilitare login con password, limitare gli
->   utenti/sorgenti, valutare `MaxStartups`/`LoginGraceTime`.
-> - **Aggressivo vs low-and-slow**: il tuning di `sshd` che ha fatto fallire il
->   tentativo 1 va accompagnato da detection sul low-and-slow (che la 40112 copre).
-> - **Superficie**: SSH esposto in DMZ è necessario?
-
 ## 7. Lezioni imparate / note operative
 
 - Un brute force troppo parallelo (`-t 4`) fallisce da solo per il rate-limiting

@@ -29,7 +29,7 @@ Diagramma di riferimento: vedi [`docs/architecture.md`](../docs/architecture.md)
 ## 3. Esecuzione dell'attacco
 
 Sono stati eseguiti **due tentativi** con impostazioni diverse, con esiti
-opposti — ed è proprio il confronto a essere didatticamente interessante.
+opposti.
 
 ### 3.1 Tentativo 1 — attacco aggressivo (fallito)
 
@@ -57,7 +57,7 @@ hydra -l adv -P /tmp/small.txt ssh://10.10.20.10 -t 1 -W 5
 
 ![Hydra tentativo 2 - riuscito](../assets/01-bruteforce/hydra-attempt2-success.png)
 
-- 201 tentativi, **1 solo task** (`-t 1`), **5 secondi di attesa** tra i tentativi (`-W 5`)
+- 201 tentativi, **1 solo thread** (`-t 1`), **5 secondi di attesa** tra i tentativi (`-W 5`)
 - Ritmo osservato: ~6-8 tentativi/minuto
 - Esito: **`[22][ssh] host: 10.10.20.10  login: adv  password: root`** → credenziali trovate
 - `1 of 1 target successfully completed, 1 valid password found`
@@ -68,7 +68,7 @@ soglia di rate-limiting di `sshd` e porta a termine tutti i tentativi fino a
 trovare la password (`root`). Lezione: *low-and-slow* aggira i limiti di
 connessione, al prezzo della lentezza.
 
-## 4. Rilevamento difensivo (Wazuh)
+## 4. Rilevamento (Wazuh)
 
 ### 4.1 Volume degli eventi
 
@@ -139,6 +139,12 @@ prima del successo.
 | Brute Force: Password Guessing | **T1110.001** | Wordlist contro l'utente noto `adv` |
 
 ## 6. Conclusioni e raccomandazioni difensive
+
+Le regole preimpostate sono risultate parzialmente efficaci: sono riuscite sì a rilevare l'attacco (tutti i tentativi d'accesso, anche se distribuiti nel tempo; regola Wazuh 40112, " Multiple authentication failures followed by a success"), ma non hanno impedito la sua riuscita (kali ha testato con successo la password, sebbene fosse l'ultima del file).
+Questo evidenzia la necessità non solo di strumenti di rilevazione, ma anche di prevenzione. In una situazione ottimale il sistema avrebbe dovuto bloccare i tentativi a livello di host ('fail2ban'), perimetrale (regole firewall/verificare la soglia) o a livello di ssh (i tentativi più distribuiti non hanno generato congestione e le connessioni non sono state disabilitate).
+Wazuh permette di implementaare un firewall-drop (Active Response) in maniera automatica, ma non era implementato.
+Sono risultate rilevanti per la riuscita dell'attacco anche il fatto che la macchina colpita avesse la porta ssh aperta (misura non necessaria per questo server) e l'utilizzo di una password debole, senza una chiave.
+
 
 > Spunti, basati sui dati raccolti:
 > - **Detection ottima, prevention assente**: rule 40112 individua la

@@ -171,11 +171,9 @@ che sul singolo pattern di rete.
 
 ## 6. Conclusioni e raccomandazioni difensive
 
-> ✏️ DA COMPLETARE (parte tua). Spunti già maturati:
-> - La detection di rete sugli attacchi applicativi richiede regole dedicate; da sola l'IDS non basta → WAF a monte
-> - Firma vs offuscamento (il caso `+`/`%20`): manutenzione e tuning continui
-> - Valore dell'IDS in chiaro; con HTTPS servirebbe TLS inspection
-> - Centralizzazione in Wazuh per correlazione e alerting
+In questo scenario l'IDS "puro" si è dimostrato parzialmente efficace: è riuscito a rilevare solamente la scansione nmap, tralasciando gli attacchi SQLi e XSS.
+Soltanto l'inserimento manuale di regole "custom" ha permesso di sollevare alert al verificarsi di questi eventi: Suricata analizza il payload dei pacchetti http alla ricerca delle firme fornite, riportando eventualmente dei log in wazuh. Questa logica si avvicina a quella di un WAF, restando comunque a livello di "detection" e non prevenzione vera e propria: l'IDS riesce ad allertare, ma i pacchetti raggiungono il bersaglio e portano a termine l'attacco.
+Come dimostrato dal punto 4.3, le regole inserite possono essere comunque aggirate con codifiche differenti degli spazi e commenti inline. Questo evidenzia come le regole debbano poter riconoscere tutti i possibili vettori d'attacco e richiedano costante manutenzione.
 
 ## 7. Lezioni imparate / note operative
 

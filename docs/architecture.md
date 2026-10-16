@@ -1,7 +1,6 @@
 # Architettura del lab
 
-Home lab difensivo (blue team / SOC) su VMware Workstation per preparazione al
-tirocinio in sicurezza delle reti.
+Home lab difensivo (blue team / SOC) su VMware Workstation.
 
 ## Ambiente
 

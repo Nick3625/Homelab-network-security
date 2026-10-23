@@ -54,7 +54,7 @@ intercettare anche ICMP, non solo TCP/UDP).
 I log del firewall vivono in formato `clog` sul disco di OPNsense: un agent che li
 legge grezzi rischia dati illeggibili. Più robusto e realistico: **inviarli via
 syslog** al manager Wazuh, che li riceve come testo pulito e li decodifica con il
-decoder **`pf`**.
+decoder **`pf`** (plugin del SIEM).
 
 ![Target syslog in OPNsense verso Wazuh](../assets/04-lateral/opnsense-syslog-target.png)
 
@@ -105,7 +105,9 @@ tipo di **normalizzazione tra sorgenti** che in un SOC va gestita per correlare.
 >   l'una o l'altra.
 
 ## 7. Lezioni imparate / note operative
-
+Questo laboratorio ha mostrato come la rilevazione di tutti i protocolli, non solo TCP o UDP (in questo esempio si è visto con ICMP), da parte del firewall sia fondamentale per osservare eventuali tentativi di ricognizione della rete.
+Altrettanto importante è fare in modo che gli eventi del firewall vengano loggati e siano accessibili dal SIEM, permettendo così un'analisi facilitata e più efficace.
+Con il reindirizzamento dei log verso Wazuh 
 - Le regole firewall devono usare **Protocol: any** per intercettare anche **ICMP**
   (non solo TCP/UDP) — altrimenti il ping cade nel default-deny silenzioso.
 - Il **default-deny di OPNsense non logga** se non abilitato → serve una regola

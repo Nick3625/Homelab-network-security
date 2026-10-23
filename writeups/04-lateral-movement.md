@@ -1,8 +1,5 @@
 # Scenario 04 — Movimento laterale DMZ→LAN (host compromesso → rete interna)
 
-> **Stato:** 🔄 In chiusura (attacco e detection confermati; mancano conclusioni) · **Tecnica MITRE:** T1021
-> **Data esecuzione:** ottobre 2026 · **Autore:** Nicolò
-
 ---
 
 ## 1. Obiettivo
@@ -37,15 +34,15 @@ ssh adv@10.10.10.10
 ```
 
 **Esito atteso e osservato:** tutti i tentativi **falliti** (timeout / `filtered`).
-È il comportamento corretto: la segmentazione impedisce alla DMZ di entrare in LAN.
-L'attacco che *fallisce* è il risultato difensivo giusto. La prova dei tentativi
+La segmentazione impedisce alla DMZ di entrare in LAN.
+L'attacco che *fallisce* è il risultato difensivo previsto e coerente con la segmentazione. La prova dei tentativi
 bloccati è visibile lato detection (§4.3, raffica di deny in `previous_output`).
 
 ## 4. Rilevamento difensivo
 
 ### 4.1 Il firewall blocca e **logga** (non basta il deny implicito)
 
-In OPNsense la DMZ (interfaccia OPT) parte con **deny implicito**, che però **non
+In OPNsense la DMZ (interfaccia firewall OPT) parte con **deny implicito** e blocco su TCP/UDP, che però **non
 lascia traccia** nei log se non configurato. Per rendere il blocco osservabile ho
 creato una regola esplicita **Block + Log** DMZ→LAN, con **Protocol: any** (per
 intercettare anche ICMP, non solo TCP/UDP).

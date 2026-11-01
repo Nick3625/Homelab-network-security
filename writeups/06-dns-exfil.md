@@ -107,15 +107,12 @@ non autorizzato). Le due si affiancano: *cosa* viene chiesto e *a chi*.
 
 ## 6. Conclusioni e raccomandazioni difensive
 
-> ✏️ DA COMPLETARE (parte tua). Spunti già maturati:
-> - **Canale lecito, rischio reale**: il DNS in uscita è permesso → l'esfiltrazione
->   passa il firewall; la difesa è la detection, non il blocco di rete.
-> - **Due angoli complementari**: firma sul dominio (fragile) + firma sulla tecnica
->   (robusta) + idealmente volume/threshold → difesa a strati.
-> - **Firma vs offuscamento**: ogni regola ha una soglia aggirabile; l'evasione di
->   una motiva l'altra (es. label corte → più volume → regola sul volume).
-> - **Mitigazioni reali**: forzare tutto il DNS sul resolver aziendale, loggare e
->   analizzare le query (lunghezza/entropia/volume), bloccare il DNS diretto in uscita.
+Questo laboratorio ha evidenziato prima di tutto come le regole di default di OPNSense non permettano di prevenire esfiltrazioni tramite DNS.
+Per rilevare i tentativi di esfiltrazione sono state implementate delle regole sull'IDS.
+La prima logga qualsiasi query DNS contenente un dominio preciso. Si tratta di un approccio debole ma utile nel caso si conoscano alcuni domini con una bad reputation (IoC, noti per essere usati da attaccanti).
+La seconda, più generica, rileva qualsiasi query con una determinata lunghezza (a livello produttivo può essere migliorata con tuning più accurato su lunghezza).
+Potrebbe, in ogni caso, presentare dei falsi positivi ed è anche aggirabile (si vedano i test finali effettuati).
+La soluzione più efficace, in un ambiente reale, sarebbe architetturale: effettuare la risoluzione in un server interno di tutte le query DNS, in modo da poterle analizzare e averne il completo controllo.
 
 ## 7. Lezioni imparate / note operative
 

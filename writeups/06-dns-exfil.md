@@ -5,9 +5,9 @@
 
 ## 1. Obiettivo
 
-Costruire da zero (in **Python/Scapy**) un canale di **esfiltrazione dati via DNS** da
+Costruire in **Python/Scapy** un canale di **esfiltrazione dati via DNS** da
 un host interno compromesso, e dimostrare che i pacchetti generati attraversano il firewall indisturbati (DNS è considerato di base un canale lecito).
-Secondo obiettivo: scrivere due regole di detection complementari e analizzarne i limiti (evasione).
+Secondo obiettivo: scrivere due regole di detection complementari e analizzarne i limiti.
 
 ## 2. Contesto e ambiente
 
@@ -60,20 +60,19 @@ Wazuh — `data.alert.signature_id: 1000010`, `data.app_proto: dns`,
 
 ![Alert Regola A (SID 1000010) in Wazuh](../assets/06-dns-exfil/wazuh-detail-ruleA.png)
 
-**Limite (importante):** in un attacco reale non conosci il dominio dell'attaccante
-→ una firma sul dominio fisso è fragile. Serve qualcosa di più generale.
+**Limite:** in un contesto reale conoscere a priori il dominio usato è raro, la misura, di conseguenza, è debole. Serve una regola più efficace.
 
 ### 4.2 Regola B — label lunga ad alta entropia (SID 1000011)
 
 Domain-agnostic: scatta su una **sequenza lunga di caratteri base32** nel nome
-(≥30), firma comportamentale del tunneling, a prescindere dal dominio:
+(≥30), a prescindere dal dominio:
 
 ```
 alert dns any any -> any any (msg:"test dns lab 2 - dominio sospetto exfil.lab"; dns.query; pcre:"/[a-z2-7]{30,}/i"; classtype:bad-unknown; sid:1000011; rev:1;)
 ```
 
 Comportamento osservato (ottimo esempio di **soglia**):
-- **chunk 0** (`0.on2he2lom5qsa...4ds.exfil.lab`, label ~48 caratteri) → **rilevato** ✅
+- **chunk 0** (`0.on2he2lom5qsa...4ds.exfil.lab`, label ~48 caratteri) → **rilevato** 
 - **chunk 1** (`1.mv3gs43un...buwc.exfil.lab`, label ~28 caratteri) → **sotto soglia**, non rilevato dalla B (lo prende comunque la A)
 
 ![Alert Regola B (SID 1000011) in Wazuh](../assets/06-dns-exfil/wazuh-detail-ruleB.png)

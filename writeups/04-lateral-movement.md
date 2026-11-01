@@ -5,8 +5,8 @@
 ## 1. Obiettivo
 
 Simulare il **movimento laterale** di un attaccante che ha già compromesso un host
-in DMZ e tenta di raggiungere la **rete interna (LAN)**. Obiettivo difensivo duplice:
-(1) verificare che la **segmentazione** di OPNsense blocchi il traffico DMZ→LAN, e
+in DMZ e tenta di raggiungere la **rete interna (LAN)**. Obiettivi:
+ verificare che la **segmentazione** di OPNsense blocchi il traffico DMZ→LAN, e
 (2) rendere quei blocchi **osservabili e centralizzati** nel SIEM, portando i log del
 firewall dentro Wazuh via syslog.
 
@@ -94,15 +94,11 @@ tipo di **normalizzazione tra sorgenti** che in un SOC va gestita per correlare.
 
 ## 6. Conclusioni e raccomandazioni difensive
 
-> ✏️ DA COMPLETARE (parte tua). Spunti già maturati:
-> - **Segmentazione efficace**: la DMZ non raggiunge la LAN → contenimento del
->   movimento laterale (il valore della rete segmentata).
-> - **Visibilità**: un deny che non viene loggato è cieco → serve regola esplicita
->   Block+Log; il SIEM non può vedere ciò che il firewall non registra.
-> - **Centralizzazione**: portare i log firewall in Wazuh abilita correlazione e
->   alerting su più sorgenti (firewall + IDS).
-> - **Difesa in profondità**: segmentazione (prevention) + logging/detection, non
->   l'una o l'altra.
+Questo laboratorio evidenzia l'importanza della segmentazione nel bloccare i tentativi di lateral movement e scansione effettuati da un attaccante già presente nella rete.
+Includere nella regola di deny ogni protocollo ('any') ha permesso di bloccare non solo le scansioni con nmap (a livello TCP o UDP, ad esempio) ma anche tutte le altre effettuabili con altri protcolli, ad esempio un ping echo (ICMP) su un range di indirizzi.
+La sola capacità del sistema di bloccare i pacchetti tra le varie sottoreti è, da sola, una misura incompleta: è fondamentale che il firewall generi dei log (il default-deny di OPNsense non logga, bisogna abilitare l'opzione) in modo che chi si occupa della sicurezza dell'infrastruttura possa rilevare l'attacco in atto.
+Una risposta veloce ed efficace è facilitata dal collezionamento dei log in una piattaforma centralizzata SIEM (nel nostro caso Wazuh), che permette di vedere tutti gli alert che si verificano nella rete in real time.
+
 
 ## 7. Lezioni imparate / note operative
 Questo laboratorio ha mostrato come la rilevazione di tutti i protocolli, non solo TCP o UDP (in questo esempio si è visto con ICMP), da parte del firewall sia fondamentale per osservare eventuali tentativi di ricognizione della rete.

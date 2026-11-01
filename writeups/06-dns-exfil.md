@@ -1,18 +1,13 @@
 # Scenario 06 — Esfiltrazione dati via DNS (Scapy) e detection custom
 
-> **Stato:** 🔄 In chiusura (attacco, tooling e detection confermati; mancano conclusioni) · **Tecnica MITRE:** T1048.003, T1071.004
-> **Data esecuzione:** ottobre 2026 · **Autore:** Nicolò
 
 ---
 
 ## 1. Obiettivo
 
 Costruire da zero (in **Python/Scapy**) un canale di **esfiltrazione dati via DNS** da
-un host interno compromesso, e dimostrare il punto chiave difensivo: **il DNS in
-uscita è un canale lecito**, quindi l'esfiltrazione **attraversa il firewall
-indisturbata** → **solo la detection** (regole Suricata custom + Wazuh) la intercetta.
-Secondo obiettivo: scrivere due regole di detection complementari e analizzarne i
-limiti (evasione).
+un host interno compromesso, e dimostrare che i pacchetti generati attraversano il firewall indisturbati (DNS è considerato di base un canale lecito).
+Secondo obiettivo: scrivere due regole di detection complementari e analizzarne i limiti (evasione).
 
 ## 2. Contesto e ambiente
 
@@ -43,15 +38,13 @@ richiesto.
 
 ![Query di esfiltrazione viste in tcpdump su Kali](../assets/06-dns-exfil/tcpdump-queries.png)
 
-> **Nota difensiva (detection vs prevention):** il firewall **non blocca** queste
-> query — il DNS in uscita è consentito. L'esfiltrazione ha successo a livello di
+> Il firewall **non blocca** le query, il DNS in uscita è consentito. L'esfiltrazione ha successo a livello di
 > rete; è la detection a doverla cogliere. Negli alert infatti `data.alert.action`
 > risulta **`allowed`**: Suricata (in modalità IDS) **rileva ma non blocca**.
 
 ## 4. Rilevamento difensivo (regole Suricata custom)
 
-Il ruleset di serie (ET Open) **non** copre l'esfiltrazione DNS applicativa generica
-→ servono regole dedicate. Ne ho scritte due, complementari.
+Il ruleset di serie (ET Open) **non** copre l'esfiltrazione DNS applicativa generica, servono regole dedicate. Ne ho scritte due, complementari.
 
 ### 4.1 Regola A — dominio sospetto (SID 1000010)
 

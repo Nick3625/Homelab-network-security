@@ -134,7 +134,7 @@ quattro alert custom (agent OPNsense 003, `data.dest_ip` 10.10.20.10):
 
 ### 4.3 Limiti della detection a firma (evasione)
 
-Finding sul campo: la regola 1000002 cerca `union\s+select` (regex, `\s` = spazio vero).
+La regola 1000002 cerca `union\s+select` (regex, `\s` = spazio vero).
 Un payload con spazio **form-encoded come `+`** (es. `--data-urlencode` di curl)
 **non viene rilevato**, mentre con spazio `%20` sì:
 

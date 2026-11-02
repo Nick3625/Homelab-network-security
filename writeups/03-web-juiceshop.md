@@ -21,8 +21,8 @@ il gap con **regole Suricata custom** verificate in Wazuh. Confronto "prima/dopo
 | Detection | Suricata (interfaccia DMZ) + regole custom → ingest in Wazuh |
 | Regole custom | [`scripts/suricata-custom-web.rules`](../scripts/suricata-custom-web.rules) → `/usr/local/etc/suricata/rules/local.rules` |
 
-HTTP in chiaro ⇒ Suricata ispeziona URI e body: i pattern SQLi/XSS sono visibili
-a livello di rete (punto non scontato: con HTTPS servirebbe TLS inspection).
+I pacchetti attraversano in chiaro la rete (sono HTTP): questo permette un'analisi diretta degli URI da parte di Suricata.
+Altrimenti, con HTTPS, servirebbe TLS Inspection.
 
 ## 3. Esecuzione degli attacchi
 

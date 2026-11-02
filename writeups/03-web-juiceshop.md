@@ -1,7 +1,7 @@
 # Scenario 03 — Attacchi web su OWASP Juice Shop (Kali → DMZ)
 
-> **Stato:** 🔄 In chiusura (attacchi + detection custom confermati; mancano conclusioni) · **Tecnica MITRE:** T1190, T1595.003
-> **Data esecuzione:** ottobre 2026 · **Autore:** Nicolò
+> **Stato:** Concluso · **Tecnica MITRE:** T1190, T1595.003
+> **Data esecuzione:** ottobre 2026 
 
 ---
 

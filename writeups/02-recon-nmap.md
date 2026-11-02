@@ -1,13 +1,13 @@
 # Scenario 02 — Ricognizione di rete con Nmap (Kali → DMZ)
 
-> **Stato:** 🔄 In chiusura (detection confermata in Wazuh; mancano solo le conclusioni) · **Tecnica MITRE:** T1046, T1595
-> **Data esecuzione:** 25/09/2026 · **Autore:** Nicolò
+> **Stato:** Concluso · **Tecnica MITRE:** T1046, T1595
+> **Data esecuzione:** 25/09/2026 
 
 ---
 
 ## 1. Obiettivo
 
-Simulare la fase di **ricognizione** di un attaccante che, ottenuto un punto d'appoggio nella rete di attacco, effettua una scansione dell'host esposto in DMZ (web server Juice Shop) per identificare porte aperte, servizi e versioni. Lato difensivo l'obiettivo è verificare **cosa rileva l'IDS (Suricata)** e **cosa passa inosservato**.
+Simulare la fase di **ricognizione** di un attaccante che, ottenuto un accesso nella rete, effettua una scansione dell'host esposto in DMZ (web server Juice Shop) per identificare porte aperte, servizi e versioni. Lato difensivo l'obiettivo è verificare **cosa rileva l'IDS (Suricata)** e **cosa passa inosservato**.
 
 ## 2. Contesto e ambiente
 
@@ -37,7 +37,7 @@ Flag utilizzati:
 | `-A` | Aggressive: OS detection + NSE scripts + traceroute | Massima rumorosità, ideale per testare la detection |
 | `-T4` | Timing aggressivo | Scansione rapida → pattern facilmente riconoscibile come scan |
 
-> Scansione volutamente "rumorosa" (`-A -T4`): l'obiettivo di questo scenario è verificare la capacità di rilevamento dell'IDS in condizioni favorevoli al difensore. Uno scan *evasivo* (`-T1`, single-port, `-sT`) sarà oggetto di un confronto nella sezione 4.2.
+> Scansione volutamente "rumorosa" (`-A -T4`): l'obiettivo di questo scenario è verificare la capacità di rilevamento dell'IDS in condizioni favorevoli al difensore. In seguito i risultati verranno paragonati con uno scan più *evasivo* (`-T1`, single-port, `-sT`).
 
 ### 3.2 Risultati della scansione
 
@@ -70,7 +70,7 @@ Flag utilizzati:
 | 1 | 1.41 ms | 10.10.30.1 | Gateway OPNsense (interfaccia ATTACK) |
 | 2 | 2.68 ms | 10.10.20.10 | Host bersaglio in DMZ |
 
-> **Osservazione difensiva:** già dalla sola ricognizione l'attaccante ottiene informazioni utili — il percorso di rete (Kali attraversa il firewall per raggiungere la DMZ), la presenza di SSH esposto (superficie per lo scenario di brute force), e indizi applicativi (`/ftp`, endpoint `/#/jobs`) sfruttabili nella fase di attacco web.
+> **Osservazione:** già dalla sola ricognizione l'attaccante ottiene informazioni utili — il percorso di rete (Kali attraversa il firewall per raggiungere la DMZ), la presenza di SSH esposto (superficie per lo scenario di brute force), e indizi applicativi (`/ftp`, endpoint `/#/jobs`) sfruttabili nella fase di attacco web.
 
 ## 4. Rilevamento difensivo
 

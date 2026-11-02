@@ -35,7 +35,7 @@ gobuster dir -u http://10.10.20.10 -w /usr/share/wordlists/dirb/common.txt -t 20
 **Finding:** Juice Shop è una **single-page application (Angular)** → senza
 accorgimenti il server risponde `200` e la stessa `index.html` (9393 byte) per
 *qualsiasi* path, rendendo il brute-force inutilizzabile. 
-La chiave è stata `--exclude-length 9393`, che filtra la risposta catch-all e fa emergere gli
+L'opzione `--exclude-length 9393`, permette di filtrare le risposte con dimensione diversa dalla pagina catch-all, evidenziando così
 **endpoint reali**:
 
 | Endpoint | Status | Note |

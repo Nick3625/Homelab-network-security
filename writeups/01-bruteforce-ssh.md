@@ -1,7 +1,7 @@
 # Scenario 01 — Brute force SSH (Kali → DMZ)
 
-> **Stato:** 🔄 In chiusura (attacco e detection documentati; mancano conclusioni) · **Tecnica MITRE:** T1110
-> **Data esecuzione:** 25/09/2026 · **Autore:** Nicolò
+> **Stato:** Concluso · **Tecnica MITRE:** T1110
+> **Data esecuzione:** 25/09/2026 
 
 ---
 
@@ -18,7 +18,7 @@ dell'attacco sia la sua rilevabilità.
 
 | Elemento | Valore |
 |---|---|
-| Attaccante | Kali Linux — `10.10.30.100` (rete ATTACK), tool `hydra` 9.7 |
+| Attaccante | Kali Linux — `10.10.30.100` (rete ATTACK), tool `hydra` v9.7 |
 | Bersaglio | Ubuntu Server DMZ — `10.10.20.10` (hostname `ubsrvadv`), SSH porta 22 |
 | Utente target | `adv` |
 | Percorso | Kali → OPNsense → DMZ (SSH consentito dalle regole firewall) |
@@ -28,8 +28,7 @@ Diagramma di riferimento: vedi [`docs/architecture.md`](../docs/architecture.md)
 
 ## 3. Esecuzione dell'attacco
 
-Sono stati eseguiti **due tentativi** con impostazioni diverse, con esiti
-opposti.
+Sono stati eseguiti **due tentativi** con impostazioni diverse ed esiti opposti.
 
 ### 3.1 Tentativo 1 — attacco aggressivo (fallito)
 
@@ -65,7 +64,7 @@ hydra -l adv -P /tmp/small.txt ssh://10.10.20.10 -t 1 -W 5
 
 **Perché riesce:** rallentando a un thread con pausa, l'attacco resta sotto la
 soglia di rate-limiting di `sshd` e porta a termine tutti i tentativi fino a
-trovare la password (`root`). Lezione: *low-and-slow* aggira i limiti di
+trovare la password (`root`, inserita manualmente in small.txt). Si dimostra così che un approccio *low-and-slow* aggira i limiti di
 connessione, al prezzo della lentezza.
 
 ## 4. Rilevamento (Wazuh)
@@ -125,11 +124,6 @@ lato Kali (07:10:26, fuso -0400 → 13:10 CEST).
 In questo run l'attacco lento è **riuscito** nonostante la mole di fallimenti:
 la detection ha funzionato (alert 40112), ma **nulla ha bloccato l'attaccante**
 prima del successo.
-
-> DA VERIFICARE: l'Active Response di Wazuh ha reagito? Controlla sull'host DMZ
-> `sudo cat /var/ossec/logs/active-responses.log` e `sudo iptables -L -n`. Se non
-> c'è stato blocco, è un'osservazione difensiva importante: il rilevamento c'è
-> ma manca la risposta automatica → da configurare.
 
 ## 5. Mappatura MITRE ATT&CK
 

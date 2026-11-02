@@ -73,7 +73,7 @@ Rilanciato l'attacco, il blocco compare centralizzato in Wazuh (Discover):
 
 ![Deny DMZ→LAN in Wazuh (decoder pf)](../assets/04-lateral/wazuh-deny-dmz-lan.png)
 
-Bonus — la segmentazione tiene **anche in uscita**: gli stessi meccanismi registrano
+La segmentazione tiene **anche in uscita**: gli stessi meccanismi registrano
 il blocco di tentativi DMZ→Internet non consentiti.
 
 ![Deny DMZ→Internet (segmentazione in uscita)](../assets/04-lateral/wazuh-deny-dmz-wan.png)

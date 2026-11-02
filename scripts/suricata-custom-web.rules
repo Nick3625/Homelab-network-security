@@ -1,0 +1,11 @@
+# Regole Suricata custom - detection attacchi web su Juice Shop (DMZ)
+# SID nel range locale (>= 1000000, obbligatorio per regole user-defined).
+# IMPORTANTE: ogni regola DEVE stare su una sola riga (niente continuazioni con backslash).
+# Posizionare in OPNsense: /usr/local/etc/suricata/rules/local.rules
+# poi abilitarle in Services -> Intrusion Detection -> Rules e fare Apply/reload.
+# Juice Shop e' in HTTP (porta 80): Suricata ispeziona URI e body in chiaro.
+
+alert http any any -> $HOME_NET any (msg:"LOCAL SQLi login bypass attempt (Juice Shop)"; flow:to_server,established; http.method; content:"POST"; http.uri; content:"/rest/user/login"; http.request_body; content:"' OR"; nocase; classtype:web-application-attack; sid:1000001; rev:1;)
+alert http any any -> $HOME_NET any (msg:"LOCAL SQLi pattern in URI (OR 1=1 / UNION SELECT)"; flow:to_server,established; http.uri; pcre:"/(\bor\b\s+1=1|union\s+select)/i"; classtype:web-application-attack; sid:1000002; rev:1;)
+alert http any any -> $HOME_NET any (msg:"LOCAL XSS attempt (script tag / js scheme)"; flow:to_server,established; http.uri; pcre:"/(<script|javascript:|onerror=|<iframe)/i"; classtype:web-application-attack; sid:1000003; rev:1;)
+alert http any any -> $HOME_NET any (msg:"LOCAL Web enumeration - access to /ftp"; flow:to_server,established; http.uri; content:"/ftp"; nocase; classtype:web-application-activity; sid:1000004; rev:1;)

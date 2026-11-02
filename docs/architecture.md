@@ -43,13 +43,3 @@ Internet
 - **SIEM**: Wazuh (OVA), agent su Ubuntu DMZ/LAN e su OPNsense (per ingest `eve.json`).
 - **Persistenza**: watchdog via cron per Suricata + permessi `eve.json`
   (vedi [`post-reboot-persistence.md`](post-reboot-persistence.md)).
-
-## Note operative importanti
-
-- Shell OPNsense = **csh** (attenzione a redirect stile bash).
-- Verificare lo stato reale dei servizi via shell (`ps aux`, `service ... status`),
-  la GUI non e' sempre affidabile.
-- Wazuh (OVA) richiede min. 4 GB RAM; con 2 GB va in stallo.
-- Container Docker: usare sempre `--restart unless-stopped`.
-- Kea DHCP: dopo reboot puo' non ripartire (porta 67 occupata) → ricarico backup
-  di config + disattivo dnsmasq.

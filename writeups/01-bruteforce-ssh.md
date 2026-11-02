@@ -147,7 +147,6 @@ Sono risultate rilevanti per la riuscita dell'attacco anche il fatto che la macc
 - Il *low-and-slow* (`-t 1 -W 5`) aggira i limiti di connessione ma è lento.
 - Wazuh correla fallimenti + successo nella regola **40112** (livello 12):
   è l'alert che indica una compromissione, non solo un tentativo.
-- Correlazione dei timestamp tra fusi orari diversi (Kali -0400 vs host CEST).
 
 ---
 

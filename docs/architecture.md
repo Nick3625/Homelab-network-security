@@ -1,6 +1,6 @@
 # Architettura del lab
 
-Home lab difensivo (blue team / SOC) su VMware Workstation.
+Homelab su VMware Workstation.
 
 ## Ambiente
 

@@ -10,7 +10,7 @@
 Attaccare l'applicazione web vulnerabile **OWASP Juice Shop** (in DMZ) con tre
 tecniche — **SQL injection**, **XSS** ed **enumerazione** — e dimostrare che il
 ruleset di serie (ET Open) **non rileva** gli attacchi applicativi, colmando poi
-il gap con **regole Suricata custom** verificate in Wazuh. Confronto "prima/dopo".
+il gap con **regole Suricata custom**, verificando poi l'efficacia in Wazuh.
 
 ## 2. Contesto e ambiente
 
@@ -26,16 +26,16 @@ Altrimenti, con HTTPS, servirebbe TLS Inspection.
 
 ## 3. Esecuzione degli attacchi
 
-### 3.1 Enumerazione — e perché il dir brute-force fallisce su una SPA
+### 3.1 Enumerazione, e perché il dir brute-force fallisce su una SPA
 
 ```bash
 gobuster dir -u http://10.10.20.10 -w /usr/share/wordlists/dirb/common.txt -t 20 --exclude-length 9393
 ```
 
 **Finding:** Juice Shop è una **single-page application (Angular)** → senza
-accorgimenti il server risponde `200` + la stessa `index.html` (9393 byte) per
-*qualsiasi* path, rendendo il brute-force inutile. La chiave è stata
-`--exclude-length 9393`, che filtra la risposta catch-all e fa emergere gli
+accorgimenti il server risponde `200` e la stessa `index.html` (9393 byte) per
+*qualsiasi* path, rendendo il brute-force inutilizzabile. 
+La chiave è stata `--exclude-length 9393`, che filtra la risposta catch-all e fa emergere gli
 **endpoint reali**:
 
 | Endpoint | Status | Note |
@@ -80,8 +80,8 @@ Nella barra di ricerca:
 
 **Finding sul percorso in rete:** la ricerca genera `GET /rest/products/search?q=...`
 e il payload **arriva al server URL-encoded** (`<` → `%3c`, `"` → `%22`), con
-risposta **500** (l'input rompe la query lato server = input non sanitizzato).
-Quindi il payload **è visibile a Suricata** sulla rete, purché la regola lavori
+risposta **500** (l'input, non sanitizzato, rompe la query lato server che ritorna errore).
+Il payload **è visibile a Suricata** sulla rete, purché la regola lavori
 sul buffer URI normalizzato (che fa il percent-decoding).
 
 ![XSS eseguito nel browser](../assets/03-web/xss-browser.png)
@@ -109,7 +109,7 @@ Lanciati gli attacchi con il **solo ruleset ET Open**:
 | XSS search | ❌ | non rilevata |
 
 **Conclusione baseline:** ET Open copre minacce di rete (scan, exploit noti con
-CVE), **non** SQLi/XSS applicative generiche → serve detection custom.
+CVE), **non** SQLi/XSS applicative generiche, serve implementare delle regole di detection customizzate.
 
 ### 4.2 Regole custom — il "dopo"
 
@@ -134,7 +134,7 @@ quattro alert custom (agent OPNsense 003, `data.dest_ip` 10.10.20.10):
 
 ### 4.3 Limiti della detection a firma (evasione)
 
-Finding sul campo: la regola 1000002 cerca `union\s+select` (`\s` = spazio vero).
+Finding sul campo: la regola 1000002 cerca `union\s+select` (regex, `\s` = spazio vero).
 Un payload con spazio **form-encoded come `+`** (es. `--data-urlencode` di curl)
 **non viene rilevato**, mentre con spazio `%20` sì:
 

@@ -72,6 +72,15 @@ Flag utilizzati:
 
 > **Osservazione:** già dalla sola ricognizione l'attaccante ottiene informazioni utili — il percorso di rete (Kali attraversa il firewall per raggiungere la DMZ), la presenza di SSH esposto (superficie per lo scenario di brute force), e indizi applicativi (`/ftp`, endpoint `/#/jobs`) sfruttabili nella fase di attacco web.
 
+### 3.3 Scansione più "leggera"
+
+```bash
+sudo nmap -sS -T2 -p 22,80 10.10.20.10
+```
+Questa scansione viene rilevata più difficilmente dall'IDS perchè viene eseguita con un numero minore di timing (prima 4, ora 2, molto più lento), effettua una SYN Scan (resetta l'handshake al ricevimento dell'ACK) e analizza solo due porte (22 e 80).
+
+![Output Nmap — Scansione leggera](../assets/02-recon/scansioneleggera.png)
+
 ## 4. Rilevamento difensivo
 
 ### 4.1 Alert generati da Suricata (visti in Wazuh)

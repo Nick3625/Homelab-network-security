@@ -44,5 +44,11 @@ Ogni write-up documenta: comandi eseguiti, alert generati (OPNsense e Wazuh), co
 
 ## Stack tecnologico
 
-OPNsense · Suricata (ET Open) · Wazuh · VMware Workstation · Kali Linux ·
-Docker (OWASP Juice Shop)
+- OPNsense
+- Suricata (ET Open)
+- Wazuh
+- VMware Workstation
+- Kali Linux
+- Docker (OWASP Juice Shop)
+- Hydra, Nmap e Gobuster
+- Python/Scapy

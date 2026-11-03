@@ -76,7 +76,7 @@ Rilanciato l'attacco, il blocco compare centralizzato in Wazuh (Discover):
 La segmentazione tiene **anche in uscita**: gli stessi meccanismi registrano
 il blocco di tentativi DMZ→Internet non consentiti.
 
-![Deny DMZ→Internet (segmentazione in uscita)](../assets/04-lateral/wazuh-deny-dmz-wantcp.png)
+![Deny DMZ→Internet (segmentazione in uscita)](../assets/04-lateral/wazuh-deny-dmz-wan-tcp.png)
 
 ### 4.4 Doppia telemetria e normalizzazione dei campi
 

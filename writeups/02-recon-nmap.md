@@ -127,6 +127,9 @@ cat /var/log/suricata/eve.json | jq 'select(.event_type=="alert") |
 
 Suricata, net test effettuato e con i ruleset utilizzati, ha rilevato solo il campo user-agent 'nmap' (pacchetti HTTP). L'IDS non ha riportato alert per le scansioni SYN utilizzati per enumerazione e OS detection.
 
+Nell'immagine seguente si possono osservare i log degli alert registrati dal SIEM nell'intervallo temporale in cui è stata eseguita la scansione più leggera e si può osservare come non abbia dato origine a nessun alert (timestamp scansione: 2026-11-03 15:59)
+![Output Wazug-mancato rilevamneto](../assets/02-recon/nologleggera.png)
+
 ## 5. Mappatura MITRE ATT&CK
 
 | Tecnica | ID | Note |

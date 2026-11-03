@@ -1,10 +1,8 @@
 # Scenario 04 — Movimento laterale DMZ→LAN (host compromesso → rete interna)
 
----
 
 > **Stato:** Concluso · **Tecnica MITRE:** T1190, T1595.003
 > **Data esecuzione:** ottobre 2026 
-
 ---
 
 ## 1. Obiettivo

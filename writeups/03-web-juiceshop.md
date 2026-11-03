@@ -124,6 +124,9 @@ Update Rules*. Ri-lanciati gli stessi attacchi:
 | XSS search | ❌ | ✅ | 1000003 | LOCAL XSS attempt |
 | Enumerazione /ftp | ❌ | ✅ | 1000004 | LOCAL Web enumeration - access to /ftp |
 
+**Nota Bene**
+Le regole scritte sono specifiche per i payload utilizzati negli attacchi, qualora ne venissero usati altri o fossero modificate la codifica o la sintassi, si potrebbero dimostrare non efficaci.
+
 Alert visibili in Wazuh (Discover, filtro `rule.groups:suricata`). Dettaglio dei
 quattro alert custom (agent OPNsense 003, `data.dest_ip` 10.10.20.10):
 

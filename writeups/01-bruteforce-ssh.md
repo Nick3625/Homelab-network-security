@@ -42,11 +42,9 @@ hydra -l adv -P /tmp/small.txt ssh://10.10.20.10 -t 4
 - Esito: **`[ERROR] all children were disabled due too many connection errors`**
 - `0 of 1 target completed, 0 valid password found` — l'attacco **non completa**
 
-**Perché fallisce:** con 4 connessioni parallele il server SSH applica il proprio
+**Perché fallisce:** con più connessioni parallele il server SSH applica il proprio
 rate-limiting sulle connessioni non autenticate (parametro `MaxStartups` di
-`sshd`), rifiutando le connessioni in eccesso. Hydra interpreta i rifiuti come
-"connection errors" e disabilita i task. Un brute force troppo aggressivo è
-quindi **auto-sabotante**.
+`sshd`), rifiutando le connessioni in eccesso. Il comportamento osservato è coerente con queste terminazioni forzate. Hydra interpreta i rifiuti come "connection errors" e disabilita i task. Un brute force troppo aggressivo si è dimostrato **auto-sabotante**.
 
 ### 3.2 Tentativo 2 — attacco lento (riuscito)
 
@@ -85,6 +83,9 @@ Sull'agent DMZ (002), nella finestra dell'attacco:
 I gruppi di alert dominanti sono `authentication_failed`, `sshd`, `pam` — il
 picco netto corrisponde alla finestra del brute force. Il rumore generato è
 enorme e inequivocabile: 1.383 fallimenti concentrati in pochi minuti.
+
+**Nota Bene**: Un tentativo unico con Hydra, utilizzando il file di password indicato (small.txt, già fornito di default da Hydra), non produce 1492 tentativi. Il file contiene 200 credenziali generali, a cui è stata aggiunta la password effettivamente utilizzata dall'account, per dimostrare il successo. Il numero riportato sulla dashboard Wazuh è il risultato di più scansioni senza successo (comprendente anche quelle effettuate con un numero di thread troppo alto) e una, finale, con successo.
+Anche gli 11 accessi riportati non sono tutti generati da Hydra, solo uno è andato a buon fine (ed è anche quello evidenziato da alert nella dashboard), gli altri sono regolari accessi dell'utente al sistema.
 
 ### 4.2 L'alert chiave: fallimenti seguiti da successo
 

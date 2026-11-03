@@ -32,6 +32,8 @@ Lo strumento è stato scritto interamente a mano, in passi incrementali:
 
 ![Script Scapy — invio query DNS](../assets/06-dns-exfil/scapy-sender.png)
 
+**Importante**: viene simulato solo il passaggio di informazioni estratte dal dispositivo, il codice non si occupa di recuperarle (stringa che va a comporre query è statica, si veda codice) e non ne verifica in maniera rigorosa la ricostruzione (viene usato tcpdump per dimostrare ricezione dei pacchetti).
+
 **Verifica sul filo:** su Kali le query arrivano attraversando OPNsense (quindi
 **ispezionate da Suricata** sull'interfaccia DMZ). I dati viaggiano dentro il nome
 richiesto.
@@ -41,6 +43,7 @@ richiesto.
 > Il firewall **non blocca** le query, il DNS in uscita è consentito. L'esfiltrazione ha successo a livello di
 > rete; è la detection a doverla cogliere. Negli alert infatti `data.alert.action`
 > risulta **`allowed`**: Suricata (in modalità IDS) **rileva ma non blocca**.
+
 
 ## 4. Rilevamento difensivo (regole Suricata custom)
 

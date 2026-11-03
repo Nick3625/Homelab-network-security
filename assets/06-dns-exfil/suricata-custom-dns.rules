@@ -1,0 +1,29 @@
+# Regole Suricata custom - detection DNS exfiltration / tunneling (lab Scapy, scenario 06)
+# ---------------------------------------------------------------------------
+# SID nel range locale (>= 1000000, obbligatorio per regole user-defined).
+# IMPORTANTE: ogni regola DEVE stare su UNA sola riga.
+# Posizionare in OPNsense: /usr/local/etc/suricata/rules/local.rules
+#   poi Services -> Intrusion Detection -> Rules -> "Download & Update Rules".
+# Ispezionano il buffer dns.query (il nome richiesto). Dominio di test: exfil.lab
+#
+# Note operative (lezioni del lab):
+# - 'nocase' vale SOLO con 'content'; con 'pcre' si usa il flag /i.
+# - scrivere la regola da shell con apici SINGOLI esterni (echo '...'),
+#   altrimenti la shell mangia le virgolette doppie e la regola viene scartata.
+# ---------------------------------------------------------------------------
+
+# Regola A (SID 1000010) - dominio sospetto.
+# Approccio debole ma utile con domini a bad reputation noti (IoC). Scatta su ogni query verso exfil.lab.
+alert dns any any -> any any (msg:"test dns lab - dominio sospetto exfil.lab"; dns.query; content:"exfil.lab"; nocase; classtype:bad-unknown; sid:1000010; rev:1;)
+
+# Regola B (SID 1000011) - label lunga ad alta entropia (domain-agnostic).
+# Rileva una sequenza >= 30 caratteri base32 nel nome: firma comportamentale del tunneling.
+alert dns any any -> any any (msg:"test dns lab 2 - dominio sospetto exfil.lab"; dns.query; pcre:"/[a-z2-7]{30,}/i"; classtype:bad-unknown; sid:1000011; rev:1;)
+
+# ---------------------------------------------------------------------------
+# VARIANTE OPZIONALE con msg piu' descrittivi (stessa logica/SID/pcre).
+# Usala SOLO se rigeneri gli screenshot, altrimenti i msg non combaciano piu'
+# con quelli mostrati nel write-up:
+#
+# alert dns any any -> any any (msg:"LOCAL DNS exfil - suspicious domain exfil.lab"; dns.query; content:"exfil.lab"; nocase; classtype:bad-unknown; sid:1000010; rev:1;)
+# alert dns any any -> any any (msg:"LOCAL DNS tunneling - abnormally long base32 label"; dns.query; pcre:"/[a-z2-7]{30,}/i"; classtype:bad-unknown; sid:1000011; rev:1;)

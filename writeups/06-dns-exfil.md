@@ -80,6 +80,8 @@ Comportamento osservato (ottimo esempio di **soglia**):
 
 ![Alert Regola B (SID 1000011) in Wazuh](../assets/06-dns-exfil/wazuh-detail-ruleB.png)
 
+File con regole scaricabile: [suricata-custom-dns](../assets/06-dns-exfil/suricata-custom-dns.rules)
+
 ### 4.3 Alert centralizzati in Wazuh
 
 Entrambe le firme confluiscono nel SIEM (agent OPNsense 003), incapsulate dalla

@@ -7,11 +7,9 @@
 
 ## 1. Obiettivo
 
-Simulare il **movimento laterale** di un attaccante che ha già compromesso un host
-in DMZ e tenta di raggiungere la **rete interna (LAN)**. Obiettivi:
- verificare che la **segmentazione** di OPNsense blocchi il traffico DMZ→LAN, e
-(2) rendere quei blocchi **osservabili e centralizzati** nel SIEM, portando i log del
-firewall dentro Wazuh via syslog.
+Simulare il tentativo di **movimento laterale** di un attaccante che, dopo aver compromesso un host
+in DMZ, cerca di raggiungere la **rete interna (LAN)**. 
+Obiettivi: verificare che la **segmentazione** di OPNsense blocchi il traffico DMZ→LAN, e rendere quei blocchi **osservabili e centralizzati** nel SIEM, portando i log del firewall dentro Wazuh.
 
 ## 2. Contesto e ambiente
 
@@ -31,9 +29,9 @@ Dalla VM DMZ compromessa, tentativi di raggiungere la LAN con tecniche tipiche d
 ricognizione/pivot:
 
 ```bash
-ping -c3 10.10.10.10
-nmap -sS -p 22,443,1514,55000 10.10.10.10
-ssh adv@10.10.10.10
+ping -c3 10.10.10.110
+nmap -sS -p 22,443,1514,55000 10.10.10.110
+ssh adv@10.10.10.110
 ```
 
 **Esito atteso e osservato:** tutti i tentativi **falliti** (timeout / `filtered`).
@@ -45,8 +43,7 @@ bloccati è visibile lato detection (§4.3, raffica di deny in `previous_output`
 
 ### 4.1 Il firewall blocca e **logga** (non basta il deny implicito)
 
-In OPNsense la DMZ (interfaccia firewall OPT) parte con **deny implicito** e blocco su TCP/UDP, che però **non
-lascia traccia** nei log se non configurato. Per rendere il blocco osservabile ho
+In OPNsense la DMZ (interfaccia firewall OPT) parte con **deny implicito** e blocco su TCP/UDP, che però **non lascia traccia** nei log se non configurato. Per rendere il blocco osservabile ho
 creato una regola esplicita **Block + Log** DMZ→LAN, con **Protocol: any** (per
 intercettare anche ICMP, non solo TCP/UDP).
 

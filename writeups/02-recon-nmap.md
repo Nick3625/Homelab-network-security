@@ -1,7 +1,7 @@
 # Scenario 02 — Ricognizione di rete con Nmap (Kali → DMZ)
 
 > **Stato:** Concluso · **Tecnica MITRE:** T1046, T1595
-> **Data esecuzione:** 25/09/2026 
+> **Data esecuzione:** 27/09/2026 
 
 ---
 
@@ -17,7 +17,7 @@ Simulare la fase di **ricognizione** di un attaccante che, ottenuto un accesso n
 | Bersaglio | Ubuntu Server DMZ — `10.10.20.10` (Juice Shop, porta 80→3000) |
 | Percorso | Kali → OPNsense (routing) → DMZ. Traffico ATTACK→DMZ **consentito** dalle regole firewall |
 | Sensore IDS | Suricata su interfacce DMZ e ATTACK — ruleset ET Open |
-| Log IDS | `/var/log/suricata/eve.json` (solo locale su OPNsense, ingest in Wazuh non ancora attivo) |
+| Log IDS | `/var/log/suricata/eve.json` (in locale su OPNsense, poi rilevati da agent Wazuh e visibili nella dashboard) |
 
 Diagramma di riferimento: vedi [`docs/architecture.md`](../docs/architecture.md).
 
@@ -94,7 +94,7 @@ _Alert rilevato durante lo scan:_
 | SID Suricata (`data.alert.signature_id`) | _da confermare aprendo un alert_ |
 | Src → Dst | 10.10.30.x (Kali) → 10.10.20.10 (DMZ) |
 
-**Osservazione chiave:** con lo scan `-sV -A -T4`, la firma che ha fatto match
+**Osservazione:** con lo scan `-sV -A -T4`, la firma che ha fatto match
 è di livello applicativo — **il User-Agent di Nmap** osservato durante il
 probing HTTP del servizio web (categoria `emerging-scan`). È un rilevamento a
 severità bassa (level 3). Il fatto che l'alert principale sia sul *User-Agent*
@@ -116,10 +116,7 @@ cat /var/log/suricata/eve.json | jq 'select(.event_type=="alert") |
 
 ### 4.2 Cosa NON è stato rilevato
 
-Suricata ha rilevato unicamente la service Detection (-sV), sonda a livello applicativo (HTTP) che portava user-agent di nmap, tralasciando i pacchetti SYN mandati alle varie porte per l'enumerazione e l'OS Detection.
-La rilevazione dipende quasi  unicamente dall'IDS, perchè il traffico passa su porte consentite del firewall e pertanto non solleva alcun log di deny.
-Osservazioni tecniche di partenza (da confermare/ampliare):
-- Suricata scrive solo su `eve.json` locale: **l'alert non raggiunge la dashboard Wazuh** (integrazione non ancora configurata) → gap di visibilità SIEM da colmare.
+Suricata, net test effettuato e con i ruleset utilizzati, ha rilevato solo il campo user-agent 'nmap' (pacchetti HTTP). L'IDS non ha riportato alert per le scansioni SYN utilizzati per enumerazione e OS detection.
 
 ## 5. Mappatura MITRE ATT&CK
 

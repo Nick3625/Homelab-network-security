@@ -2,6 +2,11 @@
 
 ---
 
+> **Stato:** Concluso · **Tecnica MITRE:** T1190, T1595.003
+> **Data esecuzione:** ottobre 2026 
+
+---
+
 ## 1. Obiettivo
 
 Simulare il **movimento laterale** di un attaccante che ha già compromesso un host

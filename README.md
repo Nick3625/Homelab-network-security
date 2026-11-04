@@ -25,7 +25,7 @@ Kali (ATTACK) ──▶ OPNsense (Suricata IDS) ──▶ DMZ (Juice Shop)
 | 02 | [Ricognizione Nmap](writeups/02-recon-nmap.md) | T1046, T1595 |
 | 03 | [Attacchi web su Juice Shop (SQLi, XSS, enum)](writeups/03-web-juiceshop.md) | T1190 |
 | 04 | [Movimento laterale DMZ→LAN](writeups/04-lateral-movement.md) | T1021 |
-| 05 | [Esfiltrazione DNS](writeups/06-dns-exfil.md) | T1021 |
+| 05 | [Esfiltrazione DNS](writeups/06-dns-exfil.md) | T1048.003/T1071.004 |
 
 Ogni write-up documenta: comandi eseguiti, alert generati (OPNsense e Wazuh), cosa non
 è stato rilevato, tecnica MITRE ATT&CK e analisi difensive.

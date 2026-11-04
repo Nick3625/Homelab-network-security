@@ -1,7 +1,7 @@
 # Scenario 02 — Ricognizione di rete con Nmap (Kali → DMZ)
 
 > **Stato:** Concluso · **Tecnica MITRE:** T1046, T1595
-> **Data esecuzione:** 27/09/2026 
+> **Data esecuzione:** settembre/ottobre 2026 
 
 ---
 
@@ -77,7 +77,7 @@ Flag utilizzati:
 ```bash
 sudo nmap -sS -T2 -p 22,80 10.10.20.10
 ```
-Questa scansione viene rilevata più difficilmente dall'IDS perchè viene eseguita con un numero minore di timing (prima 4, ora 2, molto più lento), effettua una SYN Scan (resetta l'handshake al ricevimento dell'ACK) e analizza solo due porte (22 e 80).
+Questa scansione viene rilevata più difficilmente dall'IDS perchè viene eseguita con un numero minore di timing (prima 4, ora 2, molto più lento), effettua una SYN Scan (manda un SYN alla porta da scansionare, dopo aver ricevuto un SYN/ACK, prova che la porta è aperta, invia un RST non portando a termine l'handshake) e analizza solo due porte (22 e 80).
 
 ![Output Nmap — Scansione leggera](../assets/02-recon/scansioneleggera.png)
 

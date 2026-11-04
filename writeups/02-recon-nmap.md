@@ -100,7 +100,6 @@ _Alert rilevato durante lo scan:_
 | rule.level (Wazuh) | 3 (basso) |
 | Agent | OPNsense.internal |
 | Timestamp | 27/09/2026 ~14:44 |
-| SID Suricata (`data.alert.signature_id`) | _da confermare aprendo un alert_ |
 | Src → Dst | 10.10.30.x (Kali) → 10.10.20.10 (DMZ) |
 
 **Osservazione:** con lo scan `-sV -A -T4`, la firma che ha fatto match

@@ -103,7 +103,6 @@ Una risposta veloce ed efficace è facilitata dal collezionamento dei log in una
 ## 7. Lezioni imparate / note operative
 Questo laboratorio ha mostrato come la rilevazione di tutti i protocolli, non solo TCP o UDP (in questo esempio si è visto con ICMP), da parte del firewall sia fondamentale per osservare eventuali tentativi di ricognizione della rete.
 Altrettanto importante è fare in modo che gli eventi del firewall vengano loggati e siano accessibili dal SIEM, permettendo così un'analisi facilitata e più efficace.
-Con il reindirizzamento dei log verso Wazuh 
 - Le regole firewall devono usare **Protocol: any** per intercettare anche **ICMP**
   (non solo TCP/UDP) — altrimenti il ping cade nel default-deny silenzioso.
 - Il **default-deny di OPNsense non logga** se non abilitato → serve una regola

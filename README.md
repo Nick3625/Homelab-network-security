@@ -1,14 +1,11 @@
 # Home Lab difensivo — Network Security
 
-Home lab **blue team / SOC** costruito su VMware per esercitare rilevamento e
-risposta agli attacchi di rete. Rete segmentata (LAN / DMZ / ATTACK) con
-**OPNsense** come firewall, **Suricata** come IDS e **Wazuh** come SIEM.
-
+Home lab **blue team** costruito su VMware per sperimentare segmentazione della rete, analisi del traffico, centralizzazione dei log e rilevamento di attività sospette
 
 ## Architettura
 
-Rete segmentata su OPNsense con tre zone e uno stack di detection completo
-(IDS → SIEM). Dettagli in [`docs/architecture.md`](docs/architecture.md).
+L'architettura del laboratorio si basa soprattutto su due sorgenti di telemetria (macchine monitorate e considerate asset del sistema, entrambe montano Ubuntu server), una VM OPNSense che funge da firewall, router e IDS, un SIEM open source (Wazuh, configurato per ricevere log dalle macchine precedentemente descritte) e una macchina che simula un attaccante (Kali).
+Dettagli in [`docs/architecture.md`](docs/architecture.md).
 
 ```
 Kali (ATTACK) ──▶ OPNsense (Suricata IDS) ──▶ DMZ (Juice Shop)

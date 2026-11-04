@@ -1,6 +1,8 @@
 # Scenario 06 — Esfiltrazione dati via DNS (Scapy) e detection custom
 
 
+> **Stato:** Concluso · **Tecnica MITRE:** T1021, T1046
+> **Data esecuzione:** ottobre 2026 
 ---
 
 ## 1. Obiettivo

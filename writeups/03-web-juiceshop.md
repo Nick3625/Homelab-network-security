@@ -80,7 +80,7 @@ Nella barra di ricerca:
 
 **Finding sul percorso in rete:** la ricerca genera `GET /rest/products/search?q=...`
 e il payload **arriva al server URL-encoded** (`<` → `%3c`, `"` → `%22`), con
-risposta **500** (l'input, non sanitizzato, rompe la query lato server che ritorna errore).
+risposta **500**: l'input, non sanitizzato, rompe la query lato server che ritorna errore. Un codice 500 normalmente non indica una SQLi, in questo caso la supposizione sulla correlazione tra i due eventi è confermata dal messaggio della piattaforma che conferma il completamento della challenge SQLi.
 Il payload **è visibile a Suricata** sulla rete, purché la regola lavori
 sul buffer URI normalizzato (che fa il percent-decoding).
 

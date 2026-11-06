@@ -37,7 +37,7 @@ Flag utilizzati:
 | `-A` | Aggressive: OS detection + NSE scripts + traceroute | Massima rumorosità, ideale per testare la detection |
 | `-T4` | Timing aggressivo | Scansione rapida → pattern facilmente riconoscibile come scan |
 
-> Scansione volutamente "rumorosa" (`-A -T4`): l'obiettivo di questo scenario è verificare la capacità di rilevamento dell'IDS in condizioni favorevoli al difensore. In seguito i risultati verranno paragonati con uno scan più *evasivo* (`-T1`, single-port, `-sT`).
+> Scansione volutamente "rumorosa" (`-A -T4`): l'obiettivo di questo scenario è verificare la capacità di rilevamento dell'IDS in condizioni favorevoli al difensore. In seguito i risultati verranno paragonati con uno scan più *evasivo* (`-T2`, SYN scan, `-sS`).
 
 ### 3.2 Risultati della scansione
 
@@ -124,7 +124,7 @@ cat /var/log/suricata/eve.json | jq 'select(.event_type=="alert") |
 
 ### 4.2 Cosa NON è stato rilevato
 
-Suricata, nel test effettuato e con i ruleset utilizzati, ha rilevato solo il campo user-agent 'nmap' (pacchetti HTTP). L'IDS non ha riportato alert per le scansioni SYN utilizzati per enumerazione e OS detection.
+Suricata, nel test effettuato e con i ruleset utilizzati, ha rilevato solo il campo user-agent 'nmap' (pacchetti HTTP). L'IDS non ha riportato alert per le scansioni SYN utilizzate per enumerazione e OS detection.
 
 Nell'immagine seguente si possono osservare i log degli alert registrati dal SIEM nell'intervallo temporale in cui è stata eseguita la scansione più leggera e si può osservare come non abbia dato origine a nessun alert (timestamp scansione: 2026-11-03 15:59)
 ![Output Wazuh-mancato rilevamento](../assets/02-recon/nologleggera.png)
@@ -146,7 +146,8 @@ L'impostazione di regole a soglia sul firewall rappresenta un'ulteriore misura i
 La misura più concreta, come visto nel primo laboratorio, sarebbe la riduzione delle superfici d'attacco (ad esempio chiusura porta ssh, se servizio è inutilizzato).
 
 ## 7. Lezioni imparate / note operative
-
+- IDS Suricata rileva principalmente solo il rumore applicativo
+- uno scanning lento ed evasivo (rivolto a porte mirate) permette all'attaccante di passare inosservato
 ---
 
 _Write-up parte del progetto [Home Lab difensivo — Network Security](../README.md)._

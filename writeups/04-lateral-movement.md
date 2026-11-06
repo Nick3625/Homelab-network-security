@@ -95,7 +95,7 @@ tipo di **normalizzazione tra sorgenti** che in un SOC va gestita per correlare.
 ## 6. Conclusioni e raccomandazioni difensive
 
 Questo laboratorio evidenzia l'importanza della segmentazione nel bloccare i tentativi di lateral movement e scansione effettuati da un attaccante già presente nella rete.
-Includere nella regola di deny ogni protocollo ('any') ha permesso di bloccare non solo le scansioni con nmap (a livello TCP o UDP, ad esempio) ma anche tutte le altre effettuabili con altri protcolli, ad esempio un ping echo (ICMP) su un range di indirizzi.
+Includere nella regola di deny ogni protocollo ('any') ha permesso di bloccare non solo le scansioni con nmap (a livello TCP o UDP, ad esempio) ma anche tutte le altre effettuabili con altri protocolli, ad esempio un ping echo (ICMP) su un range di indirizzi.
 La sola capacità del sistema di bloccare i pacchetti tra le varie sottoreti è, da sola, una misura incompleta: è fondamentale che il firewall generi dei log (il default-deny di OPNsense non logga, bisogna abilitare l'opzione) in modo che chi si occupa della sicurezza dell'infrastruttura possa rilevare l'attacco in atto.
 Una risposta veloce ed efficace è facilitata dal collezionamento dei log in una piattaforma centralizzata SIEM (nel nostro caso Wazuh), che permette di vedere tutti gli alert che si verificano nella rete in real time.
 

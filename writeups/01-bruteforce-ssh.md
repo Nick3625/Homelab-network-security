@@ -137,7 +137,7 @@ prima del successo.
 
 Le regole preimpostate sono risultate parzialmente efficaci: sono riuscite sì a rilevare l'attacco (tutti i tentativi d'accesso, anche se distribuiti nel tempo; regola Wazuh 40112, " Multiple authentication failures followed by a success"), ma non hanno impedito la sua riuscita (kali ha testato con successo la password, sebbene fosse l'ultima del file).
 Questo evidenzia la necessità non solo di strumenti di rilevazione, ma anche di prevenzione. In una situazione ottimale il sistema avrebbe dovuto bloccare i tentativi a livello di host ('fail2ban'), perimetrale (regole firewall/verificare la soglia) o a livello di ssh (i tentativi più distribuiti non hanno generato congestione e le connessioni non sono state disabilitate).
-Wazuh permette di implementaare un firewall-drop (Active Response) in maniera automatica, ma non era implementato.
+Wazuh permette di implementare un firewall-drop (Active Response) in maniera automatica, ma non era implementato.
 Sono risultate rilevanti per la riuscita dell'attacco anche il fatto che la macchina colpita avesse la porta ssh aperta (misura non necessaria per questo server) e l'utilizzo di una password debole, senza una chiave.
 
 

@@ -1,4 +1,4 @@
-# Regole Suricata custom - detection DNS exfiltration / tunneling (lab Scapy, scenario 06)
+# Regole Suricata custom - detection DNS exfiltration / tunneling (lab Scapy, scenario 05)
 # ---------------------------------------------------------------------------
 # SID nel range locale (>= 1000000, obbligatorio per regole user-defined).
 # IMPORTANTE: ogni regola DEVE stare su UNA sola riga.

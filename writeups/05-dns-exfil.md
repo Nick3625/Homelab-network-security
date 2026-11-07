@@ -1,4 +1,4 @@
-# Scenario 06 — Esfiltrazione dati via DNS (Scapy) e detection custom
+# Scenario 05 — Esfiltrazione dati via DNS (Scapy) e detection custom
 
 
 > **Stato:** Concluso · **Tecnica MITRE:** T1048.003, T1071.004
@@ -32,7 +32,7 @@ Lo strumento è stato scritto interamente a mano, in passi incrementali:
    caratteri per label**, con un indice per il riordino lato ricevente.
 4. **Sender**: loop che per ogni chunk invia la query `<indice>.<dati>.exfil.lab`.
 
-![Script Scapy — invio query DNS](../assets/06-dns-exfil/scapy-sender.png)
+![Script Scapy — invio query DNS](../assets/05-dns-exfil/scapy-sender.png)
 
 **Importante**: viene simulato solo il passaggio di informazioni estratte dal dispositivo, il codice non si occupa di recuperarle (stringa che va a comporre query è statica, si veda codice) e non ne verifica in maniera rigorosa la ricostruzione (viene usato tcpdump per dimostrare ricezione dei pacchetti).
 
@@ -40,7 +40,7 @@ Lo strumento è stato scritto interamente a mano, in passi incrementali:
 **ispezionate da Suricata** sull'interfaccia DMZ). I dati viaggiano dentro il nome
 richiesto.
 
-![Query di esfiltrazione viste in tcpdump su Kali](../assets/06-dns-exfil/tcpdump-queries.png)
+![Query di esfiltrazione viste in tcpdump su Kali](../assets/05-dns-exfil/tcpdump-queries.png)
 
 > Il firewall **non blocca** le query, il DNS in uscita è consentito. L'esfiltrazione ha successo a livello di
 > rete; è la detection a doverla cogliere. Negli alert infatti `data.alert.action`
@@ -63,7 +63,7 @@ Scatta su **tutte** le query verso `exfil.lab` (entrambi i chunk). Dettaglio in
 Wazuh — `data.alert.signature_id: 1000010`, `data.app_proto: dns`,
 `data.dns.queries.rrname` con il nome esfiltrante:
 
-![Alert Regola A (SID 1000010) in Wazuh](../assets/06-dns-exfil/wazuh-detail-ruleA.png)
+![Alert Regola A (SID 1000010) in Wazuh](../assets/05-dns-exfil/wazuh-detail-ruleA.png)
 
 **Limite:** in un contesto reale conoscere a priori il dominio usato è raro, la misura, di conseguenza, è debole. Serve una regola più efficace.
 
@@ -80,16 +80,16 @@ Comportamento osservato (ottimo esempio di **soglia**):
 - **chunk 0** (`0.on2he2lom5qsa...4ds.exfil.lab`, label ~48 caratteri) → **rilevato** 
 - **chunk 1** (`1.mv3gs43un...buwc.exfil.lab`, label ~28 caratteri) → **sotto soglia**, non rilevato dalla B (lo prende comunque la A)
 
-![Alert Regola B (SID 1000011) in Wazuh](../assets/06-dns-exfil/wazuh-detail-ruleB.png)
+![Alert Regola B (SID 1000011) in Wazuh](../assets/05-dns-exfil/wazuh-detail-ruleB.png)
 
-File con regole scaricabile: [suricata-custom-dns](../assets/06-dns-exfil/suricata-custom-dns.rules)
+File con regole scaricabile: [suricata-custom-dns](../assets/05-dns-exfil/suricata-custom-dns.rules)
 
 ### 4.3 Alert centralizzati in Wazuh
 
 Entrambe le firme confluiscono nel SIEM (agent OPNsense 003), incapsulate dalla
 regola Wazuh `86601` ("Suricata: Alert") con `rule.level 3`:
 
-![Alert DNS exfil in Wazuh (Discover)](../assets/06-dns-exfil/wazuh-alerts-list.png)
+![Alert DNS exfil in Wazuh (Discover)](../assets/05-dns-exfil/wazuh-alerts-list.png)
 
 ## 4.4 Limiti della detection a firma (evasione)
 

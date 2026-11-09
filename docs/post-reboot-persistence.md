@@ -7,7 +7,6 @@
 
 | Componente | Comportamento al reboot | Soluzione |
 |---|---|---|
-| Juice Shop (Docker) | Riparte da solo | `docker run --restart unless-stopped` + `systemctl enable docker` |
 | Kea / DHCP (porta 67) | Parte male (dnsmasq rioccupa la 67) | Ricarico un backup di config a ogni avvio + disattivo dnsmasq |
 | **Suricata** | Puo' non ripartire / restare "stale" | Watchdog (vedi sotto) |
 | **Permessi `eve.json`** | Ricreato `root -rw-------`, Wazuh smette di leggere | Watchdog (vedi sotto) |
@@ -22,16 +21,14 @@ Lo script [`scripts/lab_watchdog.sh`](../scripts/lab_watchdog.sh) copre sia Suri
    pidfile stale (configctl dice "running as pid X" ma `ps` non lo trova).
 2. **eve.json** — rimette `chmod 644` sul file (e `755` sulla cartella) così
    l'utente `wazuh` dell'agent puo' leggerlo. Necessario perche' Suricata ricrea
-   il file come `root:wheel -rw-------` a ogni restart/rotazione, rompendo
-   silenziosamente l'ingest verso Wazuh.
+   il file come `root:wheel -rw-------` a ogni restart/rotazione, impedendo così l'accesso ai log all'agent Wazuh.
 
 ### Perche' e' robusto rispetto ai reboot
 
-- La **voce cron** che lancia il watchdog e' salvata in `config.xml`, quindi
-  finisce **dentro il backup di config** che gia' ricarichi a ogni avvio →
-  nessun passo manuale aggiuntivo.
-- Girando ogni pochi minuti, il watchdog **auto-ripara** anche restart di
-  Suricata avvenuti in corso di sessione, non solo al boot.
+Facendo un backup della configurazione del firewall, la **voce cron** che lancia il watchdog viene salvata in `config.xml`, quindi
+finisce **dentro il backup** e ricaricandolo ad ogni avvio include automaticamente l'esecuzione regolare dello script.
+Inoltre, girando ogni pochi minuti, il watchdog **auto-ripara** anche restart di
+Suricata avvenuti in corso di sessione, non solo al boot.
 
 ## Installazione (sull'OPNsense)
 
@@ -83,14 +80,7 @@ Poi: genera traffico dalla Kali e verifica che gli alert `rule.groups:suricata`
 compaiano in Wazuh.
 
 ## Note e limiti
-
-- I due **file su disco** (`/usr/local/bin/lab_watchdog.sh` e la configd action)
-  sopravvivono ai reboot e normalmente agli aggiornamenti del firmware, ma un
-  major upgrade potrebbe toccarli: sono versionati in questo repo per essere
-  ridistribuiti in un attimo.
 - `chmod 644` rende `eve.json` leggibile a tutti gli utenti locali del firewall:
-  accettabile in un lab, da rivedere in produzione (in prod: far girare il
-  logcollector come root, oppure usare `filemode` di Suricata).
+  può essere accettabile in un homelab, in altri ambienti potrebbe rivelarsi una gestione non sicura.
 - Se dopo un aggiornamento del ruleset Suricata parte ma con regole "vecchie",
-  serve comunque il ciclo manuale Enabled OFF→ON in
-  `Intrusion Detection → Administration` (caso raro, solo post-update).
+  serve comunque il ciclo manuale Enabled OFF→ON in  `Intrusion Detection → Administration` (caso raro, solo post-update).

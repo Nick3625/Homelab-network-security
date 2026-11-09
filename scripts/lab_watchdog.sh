@@ -4,7 +4,7 @@
 #   1) Se Suricata non e' realmente in esecuzione, forza un restart via configctl.
 #   2) Riallinea i permessi di /var/log/suricata/eve.json in modo che
 #      l'agent Wazuh (utente 'wazuh') possa leggerlo, dato che Suricata
-#      ricrea il file come root:wheel -rw------- a ogni restart/rotazione.
+#      ricrea il file come root:wheel -rw------- a ogni restart/rotazione dei log.
 #
 # Va eseguito periodicamente via cron (vedi docs/post-reboot-persistence.md).
 # Shell: /bin/sh (POSIX) - NON csh. Su OPNsense csh e' solo la shell interattiva.
